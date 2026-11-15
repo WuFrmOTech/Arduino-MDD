@@ -56,6 +56,13 @@ float {prefix}_readCm() {{
     return echoUs * 0.01715f;
 }}"""
 
+def linked_objects(instance, objects, source, relation_id):
+    return [
+        objects[link["target"]]
+        for link in instance["links"]
+        if link["source"] == source["id"]
+        and link["relationId"] == relation_id
+    ]
 
 def print_values(document):
     """Preview the distance sensor code for each conforming instance."""
@@ -66,11 +73,11 @@ def print_values(document):
         for cls in metamodel["classes"]
         for attr in cls["attributes"]
     }
-    contains_parts_id = next(
-        relation["id"]
+    relations = {
+        relation["name"]: relation["id"]
         for relation in metamodel["relations"]
-        if relation["name"] == "containsParts"
-    )
+        if relation["name"]
+    }
 
     for instance in document["instanceModels"]:
         if instance["name"] == "Invalid Model":
@@ -82,16 +89,39 @@ def print_values(document):
 
         print(f"\n// {instance['name']}")
 
-        for link in instance["links"]:
-            if link["source"] != robot["id"]:
-                continue
-            if link["relationId"] != contains_parts_id:
+        controller, = linked_objects(
+            instance, objects, robot, relations["controller"]
+        )
+        settings = read_values(controller, attributes)
+
+        for field in ("cruiseSpeed", "turnSpeed", "defaultTurnAngle"):
+            print(f"constexpr int controller_{field} = {settings[field]};")
+
+        robot_name = read_values(robot, attributes)["name"]
+        setup_lines = [
+            "Serial.begin(9600);",
+            f"Serial.println({json.dumps(robot_name)});",
+        ]
+
+        for part in linked_objects(instance, objects, robot, relations["containsParts"]):
+            if classes[part["classId"]] != "DistanceSensor":
                 continue
 
-            part = objects[link["target"]]
-            if classes[part["classId"]] == "DistanceSensor":
-                values = read_values(part, attributes)
-                print(generate_distance_sensor(values))
+            values = read_values(part, attributes)
+            prefix = part_name(values["name"])
+
+            for threshold in linked_objects(instance, objects, part, relations["thresholds"]):
+                fields = read_values(threshold, attributes)
+                label = re.sub(r"[^a-zA-Z0-9_]", "_", fields["name"])
+                print(f"constexpr double {prefix}_threshold_{label}Cm = {fields['distanceCm']};")
+
+            print(generate_distance_sensor(values))
+            setup_lines.append(f"{prefix}_init();")
+
+        print("\nvoid setup() {")
+        for line in setup_lines:
+            print(f"    {line}")
+        print("}")
 
 
 def main():
