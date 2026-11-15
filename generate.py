@@ -64,6 +64,73 @@ def linked_objects(instance, objects, source, relation_id):
         and link["relationId"] == relation_id
     ]
 
+def generate_line_tracker(values, channels):
+    prefix = part_name(values["name"])
+    positions = {"Left": "left", "Center": "centre", "Right": "right"}
+    constants = [
+        f"constexpr int {prefix}_darknessThreshold = {values['darknessThreshold']};"
+    ]
+    init_lines = []
+    readers = []
+
+    for channel in channels:
+        side = positions[channel["position"]]
+        pin_name = f"{prefix}_{side}Pin"
+        constants.append(f"constexpr uint8_t {pin_name} = {channel['pin']};")
+        init_lines.append(f"    pinMode({pin_name}, INPUT);")
+        readers.append(
+            f"bool {prefix}_{side}Dark() {{\n"
+            f"    return analogRead({pin_name}) >= {prefix}_darknessThreshold;\n"
+            f"}}"
+        )
+
+    return "\n".join([
+        *constants,
+        "",
+        f"void {prefix}_init() {{",
+        *init_lines,
+        "}",
+        "",
+        *readers,
+    ])
+
+def generate_status_led(values):
+    prefix = part_name(values["name"])
+    colours = {
+        "Red": "Red",
+        "Green": "Green",
+        "Blue": "Blue",
+        "White": "White",
+        "Off": "Black",
+    }
+    colour = colours[values["defaultColor"]]
+    interval = values.get("blinkIntervalMs", 500)
+
+    return f"""constexpr uint8_t {prefix}_pin = {values['pin']};
+constexpr int {prefix}_ledCount = {values['ledCount']};
+constexpr unsigned long {prefix}_blinkIntervalMs = {interval}UL;
+CRGB {prefix}_pixels[{prefix}_ledCount];
+
+void {prefix}_setColour(CRGB colour) {{
+    fill_solid({prefix}_pixels, {prefix}_ledCount, colour);
+    FastLED.show();
+}}
+
+void {prefix}_on() {{
+    {prefix}_setColour(CRGB::{colour});
+}}
+
+void {prefix}_off() {{
+    {prefix}_setColour(CRGB::Black);
+}}
+
+void {prefix}_init() {{
+    FastLED.addLeds<WS2812, {prefix}_pin, GRB>(
+        {prefix}_pixels, {prefix}_ledCount
+    );
+    {prefix}_off();
+}}"""
+
 def print_values(document):
     """Preview the distance sensor code for each conforming instance."""
     metamodel = document["metaModel"]
@@ -78,6 +145,8 @@ def print_values(document):
         for relation in metamodel["relations"]
         if relation["name"]
     }
+
+    
 
     for instance in document["instanceModels"]:
         if instance["name"] == "Invalid Model":
@@ -104,8 +173,34 @@ def print_values(document):
         ]
 
         for part in linked_objects(instance, objects, robot, relations["containsParts"]):
-            if classes[part["classId"]] != "DistanceSensor":
+            kind = classes[part["classId"]]
+            values = read_values(part, attributes)
+
+            if kind == "LineTracker":
+                channels = [
+                    read_values(channel, attributes)
+                    for channel in linked_objects(instance, objects, part, relations["channels"])
+                ]
+                print(generate_line_tracker(values, channels))
+                setup_lines.append(f"{part_name(values['name'])}_init();")
                 continue
+
+            if kind == "StatusLED":
+                print(generate_status_led(values))
+                setup_lines.append(f"{part_name(values['name'])}_init();")
+                continue
+
+            if kind != "DistanceSensor":
+                continue
+
+            prefix = part_name(values["name"])
+            for threshold in linked_objects(instance, objects, part, relations["thresholds"]):
+                fields = read_values(threshold, attributes)
+                label = re.sub(r"[^a-zA-Z0-9_]", "_", fields["name"])
+                print(f"constexpr double {prefix}_threshold_{label}Cm = {fields['distanceCm']};")
+
+            print(generate_distance_sensor(values))
+            setup_lines.append(f"{prefix}_init();")
 
             values = read_values(part, attributes)
             prefix = part_name(values["name"])
