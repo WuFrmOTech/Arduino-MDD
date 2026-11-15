@@ -7,6 +7,7 @@ COLOURS = {
     "Red": (255, 0, 0), "Green": (0, 255, 0), "Blue": (0, 0, 255),
     "White": (255, 255, 255), "Off": (0, 0, 0),
 }
+DEFAULT_COLOUR = "White"  # documented default when a StatusLED has no defaultColor
 
 
 class Instance:
@@ -65,7 +66,9 @@ class Instance:
         kind = self.kind(obj)
         values = self.fields(obj)
         if kind == "DistanceSensor":
-            values["mount"] = values.pop("mountPosition")
+            mount = values.pop("mountPosition", None)  # optional
+            if mount is not None:
+                values["mount"] = mount
             thresholds = [self.fields(t) for t in self.targets(obj, "thresholds")]
             distances = {}
             for threshold in thresholds:
@@ -87,19 +90,24 @@ class Instance:
                 values[side + "PwmPin"] = motor["powerPin"]
                 values[side + "DirectionPin"] = motor["directionPin"]
         elif kind == "LineTracker":
-            for channel in self.targets(obj, "channels"):
+            channels = self.targets(obj, "channels")
+            if not channels:
+                raise ValueError("A line tracker needs at least one channel")
+            for channel in channels:
                 attrs = self.fields(channel)
-                side = {"Left":"left", "Center":"centre", "Right":"right"}[attrs["position"]]
+                side = {"Left": "left", "Center": "centre", "Centre": "centre",
+                        "Right": "right"}[attrs["position"]]
                 key = side + "Pin"
                 if key in values:
                     raise ValueError("Line-channel positions must be unique")
                 values[key] = attrs["pin"]
-            if not self.targets(obj, "channels"):
-                raise ValueError("A line tracker needs at least one channel")
         elif kind == "StatusLED":
             values["dataPin"] = values.pop("pin")
             values["count"] = values.pop("ledCount")
-            values["red"], values["green"], values["blue"] = COLOURS[values.pop("defaultColor")]
+            colour = values.pop("defaultColor", DEFAULT_COLOUR)  # optional
+            if colour not in COLOURS:
+                raise ValueError(f"Unknown LED colour {colour!r}")
+            values["red"], values["green"], values["blue"] = COLOURS[colour]
         else:
             raise ValueError(f"Unsupported part class {kind}")
         return {"type": kind, **values}
@@ -116,7 +124,7 @@ class Instance:
         if any(o["id"] not in owned for o in driven + self.targets(controller, "reads")):
             raise ValueError("The controller must link to parts belonging to its robot")
         parts = [self.part(o) for o in parts]
-        pins = [v for p in parts for k,v in p.items() if k.endswith("Pin")]
+        pins = [v for p in parts for k, v in p.items() if k.endswith("Pin")]
         if len(set(pins)) != len(pins):
             raise ValueError("Hardware pin assignments must be unique within a robot")
         scenario = re.sub(r"[^a-zA-Z0-9_]", "", self.model["name"])
@@ -124,14 +132,17 @@ class Instance:
                 "controller": self.fields(controller), "parts": parts}
 
 
-def read_models(path):
+def read_models(path, strict=False):
+    """Return (robots, errors). A model that does not conform to the language is
+    reported in `errors` and skipped, unless strict=True, which raises instead."""
     document = json.loads(path.read_text(encoding="utf-8"))
-    robots = []
+    robots, errors = [], []
     for model in document["instanceModels"]:
-        if model["name"] == "Invalid Model":
-            continue  # The supplied negative example is deliberately excluded.
         try:
             robots.append(Instance(model, document["metaModel"]).robot())
         except (KeyError, ValueError, TypeError) as exc:
-            raise ValueError(f"{model['name']}: {exc}") from exc
-    return robots
+            message = f"{model.get('name', '?')}: {type(exc).__name__}: {exc}"
+            if strict:
+                raise ValueError(message) from exc
+            errors.append(message)
+    return robots, errors
