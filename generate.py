@@ -1,16 +1,24 @@
-"""Generate Arduino sketches from the course modeling tool export."""
+"""Generate Arduino sketches from the course modeling tool export.
+
+Usage:  python generate.py <model.iml.json> <output-dir> [--strict]
+"""
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 
 from model_reader import read_models
 
-CONTROLLER_SETTINGS = (
-    "cruiseSpeed", "turnSpeed", "defaultTurnAngle"
-)
 PIN = "uint8_t"
 MS = "unsigned long"
+
+# Documented defaults, used only when the model leaves the value out.
+DEFAULTS = {"blinkIntervalMs": 500, "darknessThreshold": 500}
+# Values that are simply left out of the sketch when the model has no value.
+OPTIONAL = {"readIntervalMs", "defaultSpeed"}
+MIN_REPORT_MS = 200
+CHANNELS = ("left", "centre", "right")
 
 
 def identifier(name):
@@ -21,8 +29,8 @@ def string(value):
     return json.dumps(value, ensure_ascii=False)
 
 
-def constant(prefix, key, value, cpp_type):
-    return f"constexpr {cpp_type} {prefix}_{key} = {value};"
+def constant(prefix, key, value, cpp_type, note=""):
+    return f"constexpr {cpp_type} {prefix}_{key} = {value};{note}"
 
 
 def pin(value):
@@ -37,6 +45,7 @@ def output(label, expression):
     return f"Serial.print(F({string(label + ' = ')})); Serial.println({expression});"
 
 
+# ---------------------------------------------------------------- templates
 def distance(name):
     return f"""
 void {name}_init() {{
@@ -52,18 +61,13 @@ float {name}_readCm() {{
   delayMicroseconds(10);
   digitalWrite({name}_triggerPin, LOW);
   const unsigned long echoUs = pulseIn({name}_echoPin, HIGH, 25000UL);
-  return echoUs * 0.01715f;
+  return echoUs * 0.01715f;  // 0 when there is no valid echo
 }}
 """
 
 
-CHANNELS = ("left", "centre", "right")
-
-
 def tracker(name, sides):
-    modes = "\n".join(
-        f"  pinMode({name}_{side}Pin, INPUT);" for side in sides
-    )
+    modes = "\n".join(f"  pinMode({name}_{side}Pin, INPUT);" for side in sides)
     readers = "\n".join(
         f"bool {name}_{side}Dark() {{\n"
         f"  return analogRead({name}_{side}Pin) >= {name}_darknessThreshold;\n"
@@ -137,16 +141,16 @@ void {name}_init() {{
 """
 
 
-# Each handler supplies a template and a list of model fields it consumes.
+# Each handler supplies a template, the pin fields it consumes and its settings.
 PARTS = {
     "DistanceSensor": (distance, ("triggerPin", "echoPin"), {"readIntervalMs": MS}),
     "LineTracker": (tracker, tuple(f"{s}Pin" for s in CHANNELS),
                     {"darknessThreshold": "int", "readIntervalMs": MS}),
     "MotorDriver": (driver, ("enablePin", "leftPwmPin", "rightPwmPin",
-                            "leftDirectionPin", "rightDirectionPin"),
+                             "leftDirectionPin", "rightDirectionPin"),
                     {"defaultSpeed": PIN}),
     "StatusLED": (led, ("dataPin",), {"count": "int", "red": PIN, "green": PIN,
-                                    "blue": PIN, "blinkIntervalMs": MS}),
+                                      "blue": PIN, "blinkIntervalMs": MS}),
 }
 
 
@@ -154,6 +158,9 @@ def tracker_sides(part):
     return [side for side in CHANNELS if f"{side}Pin" in part]
 
 
+# ---------------------------------------------------------- default behaviour
+# Phase 3: replace default_loop() with generated control logic. Nothing else in
+# the generator depends on what loop() contains.
 def default_loop(parts):
     lines = []
     for part in parts:
@@ -171,10 +178,14 @@ def default_loop(parts):
                 "}",
             ])
         elif kind in ("DistanceSensor", "LineTracker"):
-            interval = f"{name}_readIntervalMs" if part.get("readIntervalMs") is not None else "200UL"
+            if part.get("readIntervalMs") is not None:
+                interval = (f"({name}_readIntervalMs > {MIN_REPORT_MS}UL ? "
+                            f"{name}_readIntervalMs : {MIN_REPORT_MS}UL)")
+            else:
+                interval = f"{MIN_REPORT_MS}UL"
             lines.extend([
                 f"static unsigned long {name}_lastReport = 0;",
-                f"if (now - {name}_lastReport >= max(200UL, {interval})) {{",
+                f"if (now - {name}_lastReport >= {interval}) {{",
                 f"  {name}_lastReport = now;",
             ])
             if kind == "DistanceSensor":
@@ -183,9 +194,10 @@ def default_loop(parts):
                 lines.append(f"  Serial.print(F({string(part['name'] + ' ')}));")
                 sides = tracker_sides(part)
                 for index, side in enumerate(sides):
-                    method = "println" if index == len(sides) - 1 else "print"
+                    last = index == len(sides) - 1
+                    method = "println" if last else "print"
+                    suffix = "" if last else " "
                     lines.append(f"  Serial.print(F({string(side + '=')}));")
-                    suffix = "" if method == "println" else " "
                     lines.append(
                         f'  Serial.{method}({name}_{side}Dark() ? '
                         f'F("dark{suffix}") : F("light{suffix}"));'
@@ -198,22 +210,29 @@ def function(name, lines):
     return "\n".join([f"void {name}() {{", *("  " + line for line in lines), "}"])
 
 
+# ------------------------------------------------------------------ visitor
 def generate(robot):
     parts = robot["parts"]
     names = [identifier(part["name"]) for part in parts]
     if len(names) != len(set(names)):
         raise ValueError(f"{robot['name']}: part names collide after C++ identifier conversion")
-    headers = ["// Generated by generate.py.", "#include <Arduino.h>"]
+    headers = [f"// Generated by {Path(sys.argv[0]).name} - do not edit by hand.",
+               "#include <Arduino.h>"]
     if any(part["type"] == "StatusLED" for part in parts):
         headers.append("#include <FastLED.h>")
     constants = []
     templates = []
     setup = ["Serial.begin(9600);", f"Serial.println(F({string(robot['name'])}));"]
-    settings = robot.get("controller", {})
-    for key in CONTROLLER_SETTINGS:
-        if settings.get(key) is not None:
-            constants.append(constant("controller", key, settings[key], "int"))
-            setup.append(output(key, f"controller_{key}"))
+
+    # Every numeric controller setting the model stores becomes a constant.
+    for key, value in robot.get("controller", {}).items():
+        if key == "name" or isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        cpp_type = "int" if isinstance(value, int) else "double"
+        ckey = re.sub(r"[^a-zA-Z0-9_]", "_", key)
+        constants.append(constant("controller", ckey, value, cpp_type))
+        setup.append(output(key, f"controller_{ckey}"))
+
     for part, name in zip(parts, names):
         template, pins, types = PARTS[part["type"]]
         setup.append(f"{name}_init();")
@@ -224,19 +243,17 @@ def generate(robot):
             constants.append(constant(name, key, pin(part[key]), PIN))
             setup.append(output(key, f"{name}_{key}"))
         for key, cpp_type in types.items():
-            if key == "blinkIntervalMs":
-                value = part.get(key)
-                if value is None:
-                    value = 500
-            elif key in ("readIntervalMs", "defaultSpeed"):
-                if part.get(key) is None:
+            value, note = part.get(key), ""
+            if value is None:
+                if key in DEFAULTS:
+                    value, note = DEFAULTS[key], "  // default: not set in the model"
+                elif key in OPTIONAL:
                     continue
-                value = part[key]
-            else:
-                value = part[key]
+                else:
+                    raise ValueError(f"{part['name']}: missing value for {key}")
             if type(value) is not int or value < 0 or (key == "count" and value == 0):
                 raise ValueError(f"{part['name']}.{key}: invalid value {value!r}")
-            constants.append(constant(name, key, value, cpp_type))
+            constants.append(constant(name, key, value, cpp_type, note))
             setup.append(output(key, f"{name}_{key}"))
         if part.get("mount") is not None:
             setup.append(output("mount", f"F({string(part['mount'])})"))
@@ -257,24 +274,34 @@ def generate(robot):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("model", type=Path)
-    parser.add_argument("output", type=Path)
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("model", type=Path, help="the .iml.json export")
+    parser.add_argument("output", type=Path, help="folder that receives one sketch folder per model")
+    parser.add_argument("--strict", action="store_true",
+                        help="stop at the first model that does not conform")
     args = parser.parse_args()
-    generated = {}
-    for robot in read_models(args.model):
-        scenario = robot["scenario"]
-        if not re.fullmatch(r"[a-zA-Z][a-zA-Z0-9_]*", scenario):
-            parser.error(f"Invalid sketch name: {scenario!r}")
-        if scenario.lower() in generated:
-            parser.error(f"Duplicate sketch name: {scenario!r}")
-        generated[scenario.lower()] = (scenario, generate(robot))
+    try:
+        robots, errors = read_models(args.model, strict=args.strict)
+        generated = {}
+        for robot in robots:
+            scenario = robot["scenario"]
+            if not re.fullmatch(r"[a-zA-Z][a-zA-Z0-9_]*", scenario):
+                raise ValueError(f"Invalid sketch name: {scenario!r}")
+            if scenario.lower() in generated:
+                raise ValueError(f"Duplicate sketch name: {scenario!r}")
+            generated[scenario.lower()] = (scenario, generate(robot))
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        parser.exit(1, f"error: {exc}\n")
+    for message in errors:
+        print(f"SKIPPED (does not conform): {message}", file=sys.stderr)
     for scenario, sketch in generated.values():
         directory = args.output / scenario
         directory.mkdir(parents=True, exist_ok=True)
         path = directory / f"{scenario}.ino"
         path.write_text(sketch, encoding="utf-8")
         print(path)
+    if not generated:
+        parser.exit(1, "error: no conforming models found\n")
 
 
 if __name__ == "__main__":
