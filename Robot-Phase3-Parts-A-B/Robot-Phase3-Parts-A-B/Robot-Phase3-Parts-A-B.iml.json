@@ -1,0 +1,1742 @@
+{
+  "metaModel": {
+    "kind": "metamodel",
+    "name": "Elegoo V4 Robot",
+    "classes": [
+      {
+        "id": "jdli6tJB",
+        "name": "Robot",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "4rnvFzDJ",
+            "name": "name",
+            "type": "STRING",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "djyYFWAh",
+        "name": "Controller",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "OsqEY3Gg",
+            "name": "cruiseSpeed",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "vtpg_xzZ",
+            "name": "turnSpeed",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "Mh4AUZST",
+            "name": "defaultTurnAngle",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "JgiNIXVc",
+        "name": "Part",
+        "isAbstract": true,
+        "attributes": [
+          {
+            "id": "UDwr5ApT",
+            "name": "name",
+            "type": "STRING",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "KpgsV3E7",
+        "name": "Sensor",
+        "isAbstract": true,
+        "attributes": []
+      },
+      {
+        "id": "BDT8_jrt",
+        "name": "DistanceSensor",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "w0QMHCqO",
+            "name": "triggerPin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "JFC_ei8z",
+            "name": "echoPin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "vEYw2uE5",
+            "name": "readIntervalMs",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "SV-fPagR",
+            "name": "mountPosition",
+            "type": "ENUM",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": "Front",
+            "enumId": "SYAeSb_X"
+          }
+        ],
+        "ports": [
+          {
+            "id": "bbd67f8e",
+            "name": "distanceOut",
+            "protocolId": "ca4ea6a0",
+            "conjugated": false
+          }
+        ]
+      },
+      {
+        "id": "MIurvhMh",
+        "name": "LineTracker",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "ppHYrt3a",
+            "name": "darknessThreshold",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "c758df5d",
+            "name": "readIntervalMs",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": "20"
+          }
+        ],
+        "ports": [
+          {
+            "id": "d00c7196",
+            "name": "lineOut",
+            "protocolId": "ba179d62",
+            "conjugated": false
+          }
+        ]
+      },
+      {
+        "id": "wm2UcdWL",
+        "name": "DistanceThreshold",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "2qce-8a-",
+            "name": "name",
+            "type": "STRING",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "2HmCaxNz",
+            "name": "distanceCm",
+            "type": "DOUBLE",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "GW3XQkBS",
+        "name": "LineChannel",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "bwnVPY8C",
+            "name": "position",
+            "type": "ENUM",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": "",
+            "enumId": "xOZiHnKb"
+          },
+          {
+            "id": "gveGR0sn",
+            "name": "pin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "dABIXLV2",
+        "name": "MotorDriver",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "ycQy59GX",
+            "name": "enablePin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "OZn8oszg",
+            "name": "defaultSpeed",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ],
+        "ports": [
+          {
+            "id": "b99b7859",
+            "name": "driveIn",
+            "protocolId": "d678e708",
+            "conjugated": true
+          }
+        ]
+      },
+      {
+        "id": "QsMx8iXV",
+        "name": "Actuator",
+        "isAbstract": true,
+        "attributes": []
+      },
+      {
+        "id": "GI4biaor",
+        "name": "StatusLED",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "E0U06JHL",
+            "name": "pin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "GLBAfZa4",
+            "name": "ledCount",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "sCA__AZ3",
+            "name": "defaultColor",
+            "type": "ENUM",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": "",
+            "enumId": "LNoAYFMf"
+          },
+          {
+            "id": "oIYfQwQb",
+            "name": "blinkIntervalMs",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 0,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ],
+        "ports": [
+          {
+            "id": "616c829f",
+            "name": "ledIn",
+            "protocolId": "4caced55",
+            "conjugated": true
+          }
+        ]
+      },
+      {
+        "id": "lIcjTKhd",
+        "name": "Motor",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "3-YaTkmY",
+            "name": "side",
+            "type": "ENUM",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": "",
+            "enumId": "6yI_DRPT"
+          },
+          {
+            "id": "8Axc4gz5",
+            "name": "powerPin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "6Kh_T2Om",
+            "name": "directionPin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ]
+      },
+      {
+        "id": "293ca44e",
+        "name": "Button",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "edb65d91",
+            "name": "pin",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          },
+          {
+            "id": "fad843fa",
+            "name": "readIntervalMs",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ],
+        "ports": [
+          {
+            "id": "dbdde9eb",
+            "name": "buttonOut",
+            "protocolId": "c745f299",
+            "conjugated": false
+          }
+        ]
+      },
+      {
+        "id": "39ac5d6b",
+        "name": "ObstacleTurnController",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "555b1c9c",
+            "name": "stopDistanceCm",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ],
+        "ports": [
+          {
+            "id": "e324d425",
+            "name": "distanceIn",
+            "protocolId": "ca4ea6a0",
+            "conjugated": true
+          },
+          {
+            "id": "0b0557d3",
+            "name": "buttonIn",
+            "protocolId": "c745f299",
+            "conjugated": true
+          },
+          {
+            "id": "25672beb",
+            "name": "drive",
+            "protocolId": "d678e708",
+            "conjugated": false
+          },
+          {
+            "id": "22acd8c6",
+            "name": "led",
+            "protocolId": "4caced55",
+            "conjugated": false
+          },
+          {
+            "id": "ac78a34a",
+            "name": "timer",
+            "protocolId": "sys-timing",
+            "conjugated": false
+          },
+          {
+            "id": "3a46dbfc",
+            "name": "log",
+            "protocolId": "sys-log",
+            "conjugated": false
+          }
+        ]
+      },
+      {
+        "id": "72a5811f",
+        "name": "BlackFloorTurnController",
+        "isAbstract": false,
+        "attributes": [
+          {
+            "id": "ada29285",
+            "name": "lineThreshold",
+            "type": "INT",
+            "visibility": "PUBLIC",
+            "lowerBound": 1,
+            "upperBound": 1,
+            "defaultValue": ""
+          }
+        ],
+        "ports": [
+          {
+            "id": "70aa3289",
+            "name": "lineIn",
+            "protocolId": "ba179d62",
+            "conjugated": true
+          },
+          {
+            "id": "1dcfb3ce",
+            "name": "buttonIn",
+            "protocolId": "c745f299",
+            "conjugated": true
+          },
+          {
+            "id": "d432196c",
+            "name": "drive",
+            "protocolId": "d678e708",
+            "conjugated": false
+          },
+          {
+            "id": "ae3f1247",
+            "name": "led",
+            "protocolId": "4caced55",
+            "conjugated": false
+          },
+          {
+            "id": "2403cd35",
+            "name": "timer",
+            "protocolId": "sys-timing",
+            "conjugated": false
+          },
+          {
+            "id": "ebd7d194",
+            "name": "log",
+            "protocolId": "sys-log",
+            "conjugated": false
+          }
+        ]
+      }
+    ],
+    "relations": [
+      {
+        "id": "DoI2dKlq",
+        "kind": "COMPOSITION",
+        "source": "jdli6tJB",
+        "target": "djyYFWAh",
+        "name": "controller",
+        "sourceMultiplicity": "1",
+        "targetMultiplicity": "1",
+        "sourceHandle": "right",
+        "targetHandle": "left"
+      },
+      {
+        "id": "KJHlgVC6",
+        "kind": "INHERITANCE",
+        "source": "dABIXLV2",
+        "target": "QsMx8iXV",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "kZvbIbLG",
+        "kind": "INHERITANCE",
+        "source": "BDT8_jrt",
+        "target": "KpgsV3E7",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "KF5SsTwR",
+        "kind": "INHERITANCE",
+        "source": "MIurvhMh",
+        "target": "KpgsV3E7",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "Xtz8Pb7L",
+        "kind": "INHERITANCE",
+        "source": "KpgsV3E7",
+        "target": "JgiNIXVc",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "FI-azDZZ",
+        "kind": "COMPOSITION",
+        "source": "dABIXLV2",
+        "target": "lIcjTKhd",
+        "name": "motors",
+        "sourceMultiplicity": "1..1",
+        "targetMultiplicity": "2..2",
+        "sourceHandle": "bottom",
+        "targetHandle": "top"
+      },
+      {
+        "id": "P0GbRWZN",
+        "kind": "INHERITANCE",
+        "source": "GI4biaor",
+        "target": "QsMx8iXV",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "right"
+      },
+      {
+        "id": "Mr9WntAN",
+        "kind": "COMPOSITION",
+        "source": "MIurvhMh",
+        "target": "GW3XQkBS",
+        "name": "channels",
+        "sourceMultiplicity": "1..1",
+        "targetMultiplicity": "1..*",
+        "sourceHandle": "bottom",
+        "targetHandle": "top"
+      },
+      {
+        "id": "DcKkMs0c",
+        "kind": "COMPOSITION",
+        "source": "BDT8_jrt",
+        "target": "wm2UcdWL",
+        "name": "thresholds",
+        "sourceMultiplicity": "1..1",
+        "targetMultiplicity": "0..*",
+        "sourceHandle": "bottom",
+        "targetHandle": "top"
+      },
+      {
+        "id": "iffr40XM",
+        "kind": "COMPOSITION",
+        "source": "jdli6tJB",
+        "target": "JgiNIXVc",
+        "name": "containsParts",
+        "sourceMultiplicity": "1..1",
+        "targetMultiplicity": "0..*",
+        "sourceHandle": "bottom",
+        "targetHandle": "top"
+      },
+      {
+        "id": "gt4wmu9k",
+        "kind": "REFERENCE",
+        "source": "djyYFWAh",
+        "target": "QsMx8iXV",
+        "name": "drives",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "1..*",
+        "sourceHandle": "right",
+        "targetHandle": "top"
+      },
+      {
+        "id": "NmAuooOd",
+        "kind": "REFERENCE",
+        "source": "djyYFWAh",
+        "target": "KpgsV3E7",
+        "name": "reads",
+        "sourceMultiplicity": "0..*",
+        "targetMultiplicity": "0..*",
+        "sourceHandle": "bottom",
+        "targetHandle": "top"
+      },
+      {
+        "id": "x4Pu5Wic",
+        "kind": "INHERITANCE",
+        "source": "QsMx8iXV",
+        "target": "JgiNIXVc",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "left",
+        "targetHandle": "right"
+      },
+      {
+        "id": "6f676249",
+        "kind": "INHERITANCE",
+        "source": "293ca44e",
+        "target": "KpgsV3E7",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "1cd5102b",
+        "kind": "INHERITANCE",
+        "source": "39ac5d6b",
+        "target": "djyYFWAh",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      },
+      {
+        "id": "2350388b",
+        "kind": "INHERITANCE",
+        "source": "72a5811f",
+        "target": "djyYFWAh",
+        "name": "",
+        "sourceMultiplicity": "",
+        "targetMultiplicity": "",
+        "sourceHandle": "top",
+        "targetHandle": "bottom"
+      }
+    ],
+    "enumerations": [
+      {
+        "id": "xOZiHnKb",
+        "name": "ChannelPosition",
+        "literals": [
+          "Left",
+          "Center",
+          "Right"
+        ]
+      },
+      {
+        "id": "LNoAYFMf",
+        "name": "LEDColor",
+        "literals": [
+          "Red",
+          "Green",
+          "Blue",
+          "White",
+          "Off"
+        ]
+      },
+      {
+        "id": "SYAeSb_X",
+        "name": "MountPosition",
+        "literals": [
+          "Front",
+          "Rear",
+          "Left",
+          "Right"
+        ]
+      },
+      {
+        "id": "6yI_DRPT",
+        "name": "MotorSide",
+        "literals": [
+          "Right",
+          "Left"
+        ]
+      }
+    ],
+    "behaviours": {
+      "39ac5d6b": {
+        "states": [
+          {
+            "id": "a54fdf44",
+            "kind": "initial",
+            "name": "",
+            "entry": "",
+            "exit": ""
+          },
+          {
+            "id": "58286e36",
+            "kind": "simple",
+            "name": "Idle",
+            "entry": "drive.stop();\nled.red();",
+            "exit": ""
+          },
+          {
+            "id": "ec98518c",
+            "kind": "simple",
+            "name": "Driving",
+            "entry": "drive.forward(cruiseSpeed);\nled.green();\ntimer.informIn(5000);",
+            "exit": ""
+          },
+          {
+            "id": "450d8225",
+            "kind": "simple",
+            "name": "Turning",
+            "entry": "drive.turnRight(turnSpeed);\nled.yellow();\nlog.log(\"turning right\");\ntimer.informIn(defaultTurnAngle * 8);",
+            "exit": ""
+          }
+        ],
+        "transitions": [
+          {
+            "id": "fa3dad57",
+            "source": "a54fdf44",
+            "target": "58286e36",
+            "trigger": "",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "65de33c7",
+            "source": "58286e36",
+            "target": "ec98518c",
+            "trigger": "buttonIn.pressed",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "8ead6ea5",
+            "source": "ec98518c",
+            "target": "58286e36",
+            "trigger": "buttonIn.pressed",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "top",
+            "targetHandle": "top"
+          },
+          {
+            "id": "7134c3c5",
+            "source": "ec98518c",
+            "target": "58286e36",
+            "trigger": "timer.timeout",
+            "guard": "",
+            "effect": "log.log(\"time up\");",
+            "sourceHandle": "bottom",
+            "targetHandle": "bottom"
+          },
+          {
+            "id": "e78fe0d5",
+            "source": "ec98518c",
+            "target": "450d8225",
+            "trigger": "distanceIn.reading",
+            "guard": "cm > 0 && cm <= stopDistanceCm",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "96a6d684",
+            "source": "450d8225",
+            "target": "ec98518c",
+            "trigger": "timer.timeout",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "top",
+            "targetHandle": "top"
+          }
+        ]
+      },
+      "72a5811f": {
+        "states": [
+          {
+            "id": "f2843b0b",
+            "kind": "initial",
+            "name": "",
+            "entry": "",
+            "exit": ""
+          },
+          {
+            "id": "b5d009b5",
+            "kind": "simple",
+            "name": "Idle",
+            "entry": "drive.stop();\nled.red();",
+            "exit": ""
+          },
+          {
+            "id": "4d72b4f7",
+            "kind": "simple",
+            "name": "Driving",
+            "entry": "drive.forward(cruiseSpeed);\nled.green();",
+            "exit": ""
+          },
+          {
+            "id": "5a71680d",
+            "kind": "simple",
+            "name": "Turning",
+            "entry": "drive.turnLeft(turnSpeed);\nled.yellow();\nlog.log(\"black floor, turning left\");\ntimer.informIn(defaultTurnAngle * 8);",
+            "exit": ""
+          }
+        ],
+        "transitions": [
+          {
+            "id": "a03fa119",
+            "source": "f2843b0b",
+            "target": "b5d009b5",
+            "trigger": "",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "0a269730",
+            "source": "b5d009b5",
+            "target": "4d72b4f7",
+            "trigger": "buttonIn.pressed",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "eaf660f5",
+            "source": "4d72b4f7",
+            "target": "b5d009b5",
+            "trigger": "buttonIn.pressed",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "top",
+            "targetHandle": "top"
+          },
+          {
+            "id": "1594152a",
+            "source": "4d72b4f7",
+            "target": "5a71680d",
+            "trigger": "lineIn.reading",
+            "guard": "centre > lineThreshold",
+            "effect": "",
+            "sourceHandle": "right",
+            "targetHandle": "left"
+          },
+          {
+            "id": "c9f7cedc",
+            "source": "5a71680d",
+            "target": "4d72b4f7",
+            "trigger": "timer.timeout",
+            "guard": "",
+            "effect": "",
+            "sourceHandle": "top",
+            "targetHandle": "top"
+          }
+        ]
+      }
+    },
+    "protocols": [
+      {
+        "id": "ca4ea6a0",
+        "name": "DistanceProtocol",
+        "signals": [
+          {
+            "id": "6d46da84",
+            "name": "reading",
+            "direction": "out",
+            "params": [
+              {
+                "id": "def7a3bd",
+                "name": "cm",
+                "type": "INT"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "ba179d62",
+        "name": "LineProtocol",
+        "signals": [
+          {
+            "id": "2aa6f314",
+            "name": "reading",
+            "direction": "out",
+            "params": [
+              {
+                "id": "d1aa7194",
+                "name": "left",
+                "type": "INT"
+              },
+              {
+                "id": "b3534c3d",
+                "name": "centre",
+                "type": "INT"
+              },
+              {
+                "id": "696f4ff9",
+                "name": "right",
+                "type": "INT"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "c745f299",
+        "name": "ButtonProtocol",
+        "signals": [
+          {
+            "id": "08e98f49",
+            "name": "pressed",
+            "direction": "out",
+            "params": []
+          }
+        ]
+      },
+      {
+        "id": "d678e708",
+        "name": "MotorProtocol",
+        "signals": [
+          {
+            "id": "529790e7",
+            "name": "stop",
+            "direction": "out",
+            "params": []
+          },
+          {
+            "id": "13b03bb8",
+            "name": "forward",
+            "direction": "out",
+            "params": [
+              {
+                "id": "aa587414",
+                "name": "speed",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "id": "e3ae8d07",
+            "name": "backward",
+            "direction": "out",
+            "params": [
+              {
+                "id": "2b2fd922",
+                "name": "speed",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "id": "9baf8380",
+            "name": "turnLeft",
+            "direction": "out",
+            "params": [
+              {
+                "id": "1fe4a9d2",
+                "name": "speed",
+                "type": "INT"
+              }
+            ]
+          },
+          {
+            "id": "c249486f",
+            "name": "turnRight",
+            "direction": "out",
+            "params": [
+              {
+                "id": "6b9ae7f4",
+                "name": "speed",
+                "type": "INT"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "4caced55",
+        "name": "LedProtocol",
+        "signals": [
+          {
+            "id": "af2bf5cc",
+            "name": "off",
+            "direction": "out",
+            "params": []
+          },
+          {
+            "id": "1d46e338",
+            "name": "red",
+            "direction": "out",
+            "params": []
+          },
+          {
+            "id": "a6604bee",
+            "name": "green",
+            "direction": "out",
+            "params": []
+          },
+          {
+            "id": "ed4794dc",
+            "name": "yellow",
+            "direction": "out",
+            "params": []
+          }
+        ]
+      }
+    ]
+  },
+  "instanceModels": [
+    {
+      "id": "c427d67e",
+      "kind": "instancemodel",
+      "name": "ScenarioE_ObstacleTurn",
+      "objects": [
+        {
+          "id": "f56fffdc",
+          "classId": "jdli6tJB",
+          "name": "TurnBot",
+          "attributeValues": {
+            "4rnvFzDJ": "TurnBot"
+          }
+        },
+        {
+          "id": "1cd36507",
+          "classId": "39ac5d6b",
+          "name": "Controller1",
+          "attributeValues": {
+            "OsqEY3Gg": "130",
+            "vtpg_xzZ": "100",
+            "Mh4AUZST": "90",
+            "555b1c9c": "15"
+          }
+        },
+        {
+          "id": "2df1e9e4",
+          "classId": "BDT8_jrt",
+          "name": "DistanceSensor1",
+          "attributeValues": {
+            "UDwr5ApT": "DistanceSensor",
+            "w0QMHCqO": "13",
+            "JFC_ei8z": "12",
+            "vEYw2uE5": "50",
+            "SV-fPagR": "Front"
+          }
+        },
+        {
+          "id": "08d96590",
+          "classId": "GI4biaor",
+          "name": "StatusLED1",
+          "attributeValues": {
+            "UDwr5ApT": "StatusLed",
+            "E0U06JHL": "4",
+            "GLBAfZa4": "2",
+            "sCA__AZ3": "Green",
+            "oIYfQwQb": "250"
+          }
+        },
+        {
+          "id": "37bee032",
+          "classId": "dABIXLV2",
+          "name": "MotorDriver1",
+          "attributeValues": {
+            "UDwr5ApT": "MD1",
+            "ycQy59GX": "3",
+            "OZn8oszg": "120"
+          }
+        },
+        {
+          "id": "ac566ac2",
+          "classId": "lIcjTKhd",
+          "name": "Motor1",
+          "attributeValues": {
+            "3-YaTkmY": "Left",
+            "8Axc4gz5": "6",
+            "6Kh_T2Om": "8"
+          }
+        },
+        {
+          "id": "e3b25a26",
+          "classId": "lIcjTKhd",
+          "name": "Motor2",
+          "attributeValues": {
+            "3-YaTkmY": "Right",
+            "8Axc4gz5": "5",
+            "6Kh_T2Om": "7"
+          }
+        },
+        {
+          "id": "94e6fde5",
+          "classId": "293ca44e",
+          "name": "Button1",
+          "attributeValues": {
+            "UDwr5ApT": "Button",
+            "edb65d91": "2",
+            "fad843fa": "20"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "d709fb61",
+          "relationId": "iffr40XM",
+          "source": "f56fffdc",
+          "target": "08d96590",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "d94cbf1d",
+          "relationId": "iffr40XM",
+          "source": "f56fffdc",
+          "target": "2df1e9e4",
+          "sourceHandle": "left",
+          "targetHandle": "top"
+        },
+        {
+          "id": "0b3c6988",
+          "relationId": "FI-azDZZ",
+          "source": "37bee032",
+          "target": "e3b25a26",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "c220d8be",
+          "relationId": "FI-azDZZ",
+          "source": "37bee032",
+          "target": "ac566ac2",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "a910b438",
+          "relationId": "DoI2dKlq",
+          "source": "f56fffdc",
+          "target": "1cd36507",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "04b7f21a",
+          "relationId": "iffr40XM",
+          "source": "f56fffdc",
+          "target": "37bee032",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "c93fd97c",
+          "relationId": "NmAuooOd",
+          "source": "1cd36507",
+          "target": "2df1e9e4",
+          "sourceHandle": "left",
+          "targetHandle": "right"
+        },
+        {
+          "id": "da3c3614",
+          "relationId": "gt4wmu9k",
+          "source": "1cd36507",
+          "target": "08d96590",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "b4d3748b",
+          "relationId": "gt4wmu9k",
+          "source": "1cd36507",
+          "target": "37bee032",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "0dd84484",
+          "relationId": "iffr40XM",
+          "source": "f56fffdc",
+          "target": "94e6fde5",
+          "sourceHandle": "left",
+          "targetHandle": "top"
+        },
+        {
+          "id": "d6d5e6a8",
+          "relationId": "NmAuooOd",
+          "source": "1cd36507",
+          "target": "94e6fde5",
+          "sourceHandle": "left",
+          "targetHandle": "right"
+        }
+      ],
+      "connectors": [
+        {
+          "id": "8267d1b7",
+          "sourceObjectId": "2df1e9e4",
+          "sourcePortId": "bbd67f8e",
+          "targetObjectId": "1cd36507",
+          "targetPortId": "e324d425"
+        },
+        {
+          "id": "fd4b7fba",
+          "sourceObjectId": "94e6fde5",
+          "sourcePortId": "dbdde9eb",
+          "targetObjectId": "1cd36507",
+          "targetPortId": "0b0557d3"
+        },
+        {
+          "id": "4084cd14",
+          "sourceObjectId": "1cd36507",
+          "sourcePortId": "25672beb",
+          "targetObjectId": "37bee032",
+          "targetPortId": "b99b7859"
+        },
+        {
+          "id": "b4058a4e",
+          "sourceObjectId": "1cd36507",
+          "sourcePortId": "22acd8c6",
+          "targetObjectId": "08d96590",
+          "targetPortId": "616c829f"
+        }
+      ]
+    },
+    {
+      "id": "a112a57b",
+      "kind": "instancemodel",
+      "name": "ScenarioF_BlackFloorTurn",
+      "objects": [
+        {
+          "id": "d961547c",
+          "classId": "jdli6tJB",
+          "name": "TapeBot",
+          "attributeValues": {
+            "4rnvFzDJ": "TapeBot"
+          }
+        },
+        {
+          "id": "5e9a0a21",
+          "classId": "72a5811f",
+          "name": "Controller1",
+          "attributeValues": {
+            "OsqEY3Gg": "110",
+            "vtpg_xzZ": "90",
+            "Mh4AUZST": "90",
+            "ada29285": "750"
+          }
+        },
+        {
+          "id": "e33a75b2",
+          "classId": "GI4biaor",
+          "name": "StatusLED1",
+          "attributeValues": {
+            "UDwr5ApT": "StatusLed",
+            "E0U06JHL": "4",
+            "GLBAfZa4": "2",
+            "sCA__AZ3": "Green",
+            "oIYfQwQb": "250"
+          }
+        },
+        {
+          "id": "6014f194",
+          "classId": "dABIXLV2",
+          "name": "MotorDriver1",
+          "attributeValues": {
+            "UDwr5ApT": "MD1",
+            "ycQy59GX": "3",
+            "OZn8oszg": "120"
+          }
+        },
+        {
+          "id": "2c9e84bf",
+          "classId": "MIurvhMh",
+          "name": "LineTracker1",
+          "attributeValues": {
+            "UDwr5ApT": "LineTracker",
+            "ppHYrt3a": "750",
+            "c758df5d": "20"
+          }
+        },
+        {
+          "id": "6d353957",
+          "classId": "lIcjTKhd",
+          "name": "Motor1",
+          "attributeValues": {
+            "3-YaTkmY": "Left",
+            "8Axc4gz5": "6",
+            "6Kh_T2Om": "8"
+          }
+        },
+        {
+          "id": "93255d45",
+          "classId": "lIcjTKhd",
+          "name": "Motor2",
+          "attributeValues": {
+            "3-YaTkmY": "Right",
+            "8Axc4gz5": "5",
+            "6Kh_T2Om": "7"
+          }
+        },
+        {
+          "id": "408ed2e2",
+          "classId": "GW3XQkBS",
+          "name": "LeftChannel",
+          "attributeValues": {
+            "bwnVPY8C": "Left",
+            "gveGR0sn": "16"
+          }
+        },
+        {
+          "id": "da31d178",
+          "classId": "GW3XQkBS",
+          "name": "CenterChannel",
+          "attributeValues": {
+            "bwnVPY8C": "Center",
+            "gveGR0sn": "15"
+          }
+        },
+        {
+          "id": "273bd5dc",
+          "classId": "GW3XQkBS",
+          "name": "RightChannel",
+          "attributeValues": {
+            "bwnVPY8C": "Right",
+            "gveGR0sn": "14"
+          }
+        },
+        {
+          "id": "3563ecd1",
+          "classId": "293ca44e",
+          "name": "Button1",
+          "attributeValues": {
+            "UDwr5ApT": "Button",
+            "edb65d91": "2",
+            "fad843fa": "20"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "0b303e2f",
+          "relationId": "iffr40XM",
+          "source": "d961547c",
+          "target": "e33a75b2",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "72dd7f32",
+          "relationId": "Mr9WntAN",
+          "source": "2c9e84bf",
+          "target": "273bd5dc",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "0629f282",
+          "relationId": "Mr9WntAN",
+          "source": "2c9e84bf",
+          "target": "408ed2e2",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "dcf43cbb",
+          "relationId": "Mr9WntAN",
+          "source": "2c9e84bf",
+          "target": "da31d178",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "84c7d3f9",
+          "relationId": "FI-azDZZ",
+          "source": "6014f194",
+          "target": "93255d45",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "f7c57a86",
+          "relationId": "FI-azDZZ",
+          "source": "6014f194",
+          "target": "6d353957",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "e740d829",
+          "relationId": "DoI2dKlq",
+          "source": "d961547c",
+          "target": "5e9a0a21",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "52a0b570",
+          "relationId": "iffr40XM",
+          "source": "d961547c",
+          "target": "6014f194",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "2357976a",
+          "relationId": "iffr40XM",
+          "source": "d961547c",
+          "target": "2c9e84bf",
+          "sourceHandle": "left",
+          "targetHandle": "top"
+        },
+        {
+          "id": "33bc2d3a",
+          "relationId": "gt4wmu9k",
+          "source": "5e9a0a21",
+          "target": "e33a75b2",
+          "sourceHandle": "right",
+          "targetHandle": "left"
+        },
+        {
+          "id": "c1651766",
+          "relationId": "NmAuooOd",
+          "source": "5e9a0a21",
+          "target": "2c9e84bf",
+          "sourceHandle": "bottom",
+          "targetHandle": "top"
+        },
+        {
+          "id": "0e7875f6",
+          "relationId": "gt4wmu9k",
+          "source": "5e9a0a21",
+          "target": "6014f194",
+          "sourceHandle": "right",
+          "targetHandle": "top"
+        },
+        {
+          "id": "906442fa",
+          "relationId": "iffr40XM",
+          "source": "d961547c",
+          "target": "3563ecd1",
+          "sourceHandle": "left",
+          "targetHandle": "top"
+        },
+        {
+          "id": "dc2d47d5",
+          "relationId": "NmAuooOd",
+          "source": "5e9a0a21",
+          "target": "3563ecd1",
+          "sourceHandle": "left",
+          "targetHandle": "right"
+        }
+      ],
+      "connectors": [
+        {
+          "id": "fa2e3500",
+          "sourceObjectId": "2c9e84bf",
+          "sourcePortId": "d00c7196",
+          "targetObjectId": "5e9a0a21",
+          "targetPortId": "70aa3289"
+        },
+        {
+          "id": "6dcf370e",
+          "sourceObjectId": "3563ecd1",
+          "sourcePortId": "dbdde9eb",
+          "targetObjectId": "5e9a0a21",
+          "targetPortId": "1dcfb3ce"
+        },
+        {
+          "id": "55ec95f5",
+          "sourceObjectId": "5e9a0a21",
+          "sourcePortId": "d432196c",
+          "targetObjectId": "6014f194",
+          "targetPortId": "b99b7859"
+        },
+        {
+          "id": "1a7f0c52",
+          "sourceObjectId": "5e9a0a21",
+          "sourcePortId": "ae3f1247",
+          "targetObjectId": "e33a75b2",
+          "targetPortId": "616c829f"
+        }
+      ]
+    }
+  ],
+  "layouts": {
+    "mm": {
+      "jdli6tJB": {
+        "x": 293.0254988441796,
+        "y": 218.45870012312713
+      },
+      "djyYFWAh": {
+        "x": 674.7998155006109,
+        "y": 198.13825861007592
+      },
+      "JgiNIXVc": {
+        "x": 241.73862181921197,
+        "y": 431.2682508677316
+      },
+      "KpgsV3E7": {
+        "x": 384.35629708096053,
+        "y": 532.7069759860971
+      },
+      "BDT8_jrt": {
+        "x": 116.82383148452234,
+        "y": 654.7561904822365
+      },
+      "MIurvhMh": {
+        "x": 460.67197317458283,
+        "y": 650.6577253889739
+      },
+      "wm2UcdWL": {
+        "x": 118.07737932512572,
+        "y": 929.8961304943215
+      },
+      "GW3XQkBS": {
+        "x": 456.44851967742466,
+        "y": 884.9557734611641
+      },
+      "xOZiHnKb": {
+        "x": 436.7718661345765,
+        "y": 1056.7591683851517
+      },
+      "LNoAYFMf": {
+        "x": 644.6757294504544,
+        "y": 1052.4083472579532
+      },
+      "dABIXLV2": {
+        "x": 835.9747522774733,
+        "y": 559.7080627499827
+      },
+      "QsMx8iXV": {
+        "x": 864.5636612250248,
+        "y": 398.50714885992045
+      },
+      "GI4biaor": {
+        "x": 1062.0658476116346,
+        "y": 487.8802278663774
+      },
+      "lIcjTKhd": {
+        "x": 823.7906800233785,
+        "y": 710.0238329450342
+      },
+      "SYAeSb_X": {
+        "x": 233.4627069381927,
+        "y": 1058.2572985256807
+      },
+      "6yI_DRPT": {
+        "x": 10.052564321599192,
+        "y": 1056.031731256518
+      },
+      "293ca44e": {
+        "x": 675,
+        "y": 655
+      },
+      "39ac5d6b": {
+        "x": 1420,
+        "y": 260
+      },
+      "72a5811f": {
+        "x": 1420,
+        "y": 490
+      }
+    },
+    "sm-39ac5d6b": {
+      "a54fdf44": {
+        "x": 100,
+        "y": 300
+      },
+      "58286e36": {
+        "x": 280,
+        "y": 300
+      },
+      "ec98518c": {
+        "x": 570,
+        "y": 300
+      },
+      "450d8225": {
+        "x": 880,
+        "y": 300
+      }
+    },
+    "sm-72a5811f": {
+      "f2843b0b": {
+        "x": 100,
+        "y": 300
+      },
+      "b5d009b5": {
+        "x": 280,
+        "y": 300
+      },
+      "4d72b4f7": {
+        "x": 570,
+        "y": 300
+      },
+      "5a71680d": {
+        "x": 880,
+        "y": 300
+      }
+    },
+    "im-c427d67e": {
+      "f56fffdc": {
+        "x": 461.7791466081345,
+        "y": 198.0012202483482
+      },
+      "1cd36507": {
+        "x": 425.89248756353163,
+        "y": 425.53114680833045
+      },
+      "2df1e9e4": {
+        "x": -213.08636007719034,
+        "y": 384.8371056318965
+      },
+      "08d96590": {
+        "x": 871.3290601917477,
+        "y": 379.9447365948416
+      },
+      "37bee032": {
+        "x": 624.2532164453103,
+        "y": 586.263977043227
+      },
+      "ac566ac2": {
+        "x": 641.2538597330695,
+        "y": 806.3249086228412
+      },
+      "e3b25a26": {
+        "x": 880.846681381438,
+        "y": 801.7144350593261
+      },
+      "94e6fde5": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    "cs-c427d67e": {
+      "1cd36507": {
+        "x": 500,
+        "y": 250
+      },
+      "2df1e9e4": {
+        "x": 100,
+        "y": 100
+      },
+      "94e6fde5": {
+        "x": 100,
+        "y": 420
+      },
+      "37bee032": {
+        "x": 925,
+        "y": 100
+      },
+      "08d96590": {
+        "x": 925,
+        "y": 420
+      }
+    },
+    "im-a112a57b": {
+      "d961547c": {
+        "x": 461.7791466081345,
+        "y": 198.0012202483482
+      },
+      "5e9a0a21": {
+        "x": 425.89248756353163,
+        "y": 425.53114680833045
+      },
+      "e33a75b2": {
+        "x": 871.3290601917477,
+        "y": 379.9447365948416
+      },
+      "6014f194": {
+        "x": 624.2532164453103,
+        "y": 586.263977043227
+      },
+      "2c9e84bf": {
+        "x": 161.30205907835057,
+        "y": 592.5859951000284
+      },
+      "6d353957": {
+        "x": 641.2538597330695,
+        "y": 806.3249086228412
+      },
+      "93255d45": {
+        "x": 880.846681381438,
+        "y": 801.7144350593261
+      },
+      "408ed2e2": {
+        "x": -197.4024956260832,
+        "y": 828.272042779093
+      },
+      "da31d178": {
+        "x": 69.70810347638394,
+        "y": 906.1766933919124
+      },
+      "273bd5dc": {
+        "x": 368.5048975092959,
+        "y": 828.7864814545261
+      },
+      "3563ecd1": {
+        "x": 100,
+        "y": 450
+      }
+    },
+    "cs-a112a57b": {
+      "5e9a0a21": {
+        "x": 500,
+        "y": 250
+      },
+      "2c9e84bf": {
+        "x": 100,
+        "y": 100
+      },
+      "3563ecd1": {
+        "x": 100,
+        "y": 420
+      },
+      "6014f194": {
+        "x": 925,
+        "y": 100
+      },
+      "e33a75b2": {
+        "x": 925,
+        "y": 420
+      }
+    }
+  }
+}
